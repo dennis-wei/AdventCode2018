@@ -1,3 +1,6 @@
+import time
+
+start = time.time()
 with open('input.txt', 'r') as f:
     nums = [int(l.strip()) for l in f]
 
@@ -15,3 +18,5 @@ while True:
     else:
         reached.add(curr)
         curr_index = (curr_index + 1) % len(nums)
+
+print(f'Took {time.time() - start} seconds')

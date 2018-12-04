@@ -33,8 +33,6 @@ def construct_guard_shifts(lines):
         guard_id = is_begins_shift(line)
         if guard_id:
             curr_guard = guard_id
-            if not curr_guard in guard_shift:
-                guard_shift[curr_guard] = defaultdict(int)
             continue
         
         if 'falls' in line:
@@ -45,6 +43,8 @@ def construct_guard_shifts(lines):
             wake_up = int(re.findall(':\d+', line)[0][1:])
         
         for i in range(fall_asleep, wake_up):
+            if not curr_guard in guard_shift:
+                guard_shift[curr_guard] = defaultdict(int)
             guard_shift[curr_guard][i] += 1
     
     return guard_shift
@@ -67,10 +67,7 @@ def part1(guard_shifts, lines_name):
     return res
 
 def get_most_slept_time(x):
-    if len(x) > 0:
-        return max(x.items(), key = lambda y: y[1])
-    else:
-        return (-1, -1) 
+    return max(x.items(), key = lambda y: y[1])
 
 def part2(guard_shifts, lines_name):
     print(f"PART 2 - {lines_name.upper()}")

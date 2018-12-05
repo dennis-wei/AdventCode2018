@@ -3,47 +3,45 @@ use std::fs::File;
 use std::time::Instant;
 
 fn main() {
-
     let test_string1 = "Aa";
     assert!(part1(&test_string1) == 0);
+    assert!(part2(&test_string1) == 0);
 
     let test_string2 = "cAa";
     assert!(part1(&test_string2) == 1);
+    assert!(part2(&test_string2) == 0);
 
     let test_string3 = "AbBa";
     assert!(part1(&test_string3) == 0);
+    assert!(part2(&test_string3) == 0);
 
     let test_string4 = "abAB";
     assert!(part1(&test_string4) == 4);
+    assert!(part2(&test_string4) == 0);
 
     let test_string5= "aabAAB";
     assert!(part1(&test_string5) == 6);
+    assert!(part2(&test_string5) == 0);
 
     let test_string6 = "dabAcCaCBAcCcaDA";
     assert!(part1(&test_string6) == 10);
+    assert!(part2(&test_string6) == 4);
 
-    let part1_now = Instant::now();
     let mut file = File::open("data/input.txt").expect("Unable to open the file");
     let mut contents = String::new();
     file.read_to_string(&mut contents).expect("Unable to read the file");
 
+    let part1_now = Instant::now();
     println!("Part 1: {}", part1(&contents));
 
     println!("In total, Part 1 took {}.{:03} seconds",
                 part1_now.elapsed().as_secs(),
                 part1_now.elapsed().subsec_millis()
     );
-    
-    assert!(part2(&test_string1) == 0);
-    assert!(part2(&test_string2) == 0);
-    assert!(part2(&test_string3) == 0);
-    assert!(part2(&test_string4) == 0);
-    assert!(part2(&test_string5) == 0);
-    assert!(part2(&test_string6) == 4);
 
     let part2_now = Instant::now();
 
-    println!("\nPart 2: {}", part2(&contents)); 
+    println!("\nPart 2: {}", part2(&contents));
 
     println!("In total, Part 2 took {}.{:03} seconds",
                 part2_now.elapsed().as_secs(),

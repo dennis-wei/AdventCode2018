@@ -41,7 +41,7 @@ fn main() {
 
     let part2_now = Instant::now();
 
-    println!("\nPart 2: {}", part2(&contents)); 
+    println!("\nPart 2: {}", part2(&contents));
 
     println!("In total, Part 2 took {}.{:03} seconds",
                 part2_now.elapsed().as_secs(),

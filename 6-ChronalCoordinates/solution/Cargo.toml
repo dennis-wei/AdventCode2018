@@ -1,0 +1,7 @@
+[package]
+name = "solution"
+version = "0.1.0"
+authors = ["Dennis Wei <dw2654@columbia.edu>"]
+
+[dependencies]
+itertools = "0.7"

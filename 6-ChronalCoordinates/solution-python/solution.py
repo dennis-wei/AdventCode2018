@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from collections import defaultdict
 
 def part1(filename):
@@ -36,7 +37,8 @@ def part2(filename, max_dist):
         if total_dist < max_dist:
             grid[idx] = 1
 
-    return np.sum(grid)
+    res = np.sum(grid)
+    return res
 
 def get_dist(c1, c2):
     return abs(c1[0] - c2[0]) + abs(c1[1] - c2[1])
@@ -60,8 +62,11 @@ def get_counts(main_coords, grid, max_x, max_y):
     return counts
 
 assert(part1('test_input1.txt') == 17)
-print(part2('test_input1.txt', 32))
 assert(part2('test_input1.txt', 32) == 16)
 
+start = time.time()
 part1('input.txt')
+print(f"Took {time.time() - start} seconds for Part 1")
+start = time.time()
 print(part2('input.txt', 10000))
+print(f"Took {time.time() - start} seconds for Part 2")

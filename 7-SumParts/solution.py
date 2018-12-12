@@ -35,7 +35,7 @@ def construct_graph(dep_list):
     return top_nodes
 
 def heap_node(node):
-    return (ord(node.value), node)
+    return (ord(node.value) - 4, node)
 
 def print_tree(root_nodes):
     eligible = []
@@ -55,10 +55,15 @@ def print_tree(root_nodes):
 
 def handle_tree_workers(root_nodes, num_workers):
     eligible = []
+    current = []
     seen = set()
     for root_node in root_nodes:
         heappush(eligible, heap_node(root_node))
     solution = ''
+    while eligible:
+        while eligible and len(current) <= 5:
+            new_node = heappop(eligible)[1]
+            heappush(current, heap_node(new_node))
 
 def part1(dep_list):
     root_nodes = construct_graph(dep_list)

@@ -1,4 +1,5 @@
 use std::i32::MIN;
+use std::time::Instant;
 
 fn get_cell_value(x: usize, y: usize, serial_number: usize) -> i32 {
     let rack_id = x + 10;
@@ -48,33 +49,41 @@ fn get_new_meta_grid(
     y: usize,
     s: usize,
     grid: &[[i32; 300]; 300],
-    meta_grid: &[[i32; 300]; 300]
-    // grid: &[[i32; 3]; 3],
-    // meta_grid: &[[i32; 3]; 3]
+    meta_grid: &[[i32; 300]; 300],
+    lagging_grid: &[[i32; 300]; 300]
+    // grid: &[[i32; 5]; 5],
+    // meta_grid: &[[i32; 5]; 5],
+    // lagging_grid: &[[i32; 5]; 5]
 ) -> i32 {
-    let mut sum = (*meta_grid)[y][x];
+    return meta_grid[y][x]
+        + meta_grid[y + 1][x + 1]
+        - lagging_grid[y + 1][x + 1]
+        + grid[y][x + s - 1]
+        + grid[y + s - 1][x];
+    // let mut sum = (*meta_grid)[y][x];
     // println!("Original value is {} at {}, {} for size {}", sum, x, y, s);
-    for i in 0..s {
-        let res = (*grid)[y + i][x + s - 1];
-        // println!("Adding {}, {}: {}", x + s - 1, y + i, res);
-        sum += res;
-    }
+    // for i in 0..s {
+    //     let res = (*grid)[y + i][x + s - 1];
+    //     println!("Adding {}, {}: {}", x + s - 1, y + i, res);
+    //     sum += res;
+    // }
 
-    for i in 0..(s - 1) {
-        let res = (*grid)[y + s - 1][x + i];
-        // println!("Adding {}, {}: {}", x + i, y + s - 1, res);
-        sum += res;
-    }
+    // for i in 0..(s - 1) {
+    //     let res = (*grid)[y + s - 1][x + i];
+    //     println!("Adding {}, {}: {}", x + i, y + s - 1, res);
+    //     sum += res;
+    // }
 
-    return sum;
+    // return sum;
 }
 
 fn part2(serial_number: usize) -> (i32, (usize, usize), usize) {
-    // const ARRAY_DIMS: usize = 3;
+    // const ARRAY_DIMS: usize = 5;
     const ARRAY_DIMS: usize = 300;
 
     let mut grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
     let mut meta_grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
+    let mut lagging_grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
 
     let mut curr_max = MIN;
     let mut curr_best_coord: (usize, usize) = (0, 0);
@@ -92,15 +101,22 @@ fn part2(serial_number: usize) -> (i32, (usize, usize), usize) {
         }
     }
 
-    // print_grid(&meta_grid);
+    // if print_grid_bool == true {
+    //     println!("LAGGING_GRID");
+    //     print_grid(&lagging_grid);
+    //     println!("META_GRID");
+    //     print_grid(&meta_grid);
+    //     println!("");
+    // }
 
     for s in 2..(ARRAY_DIMS + 1) {
         println!("Handling size {}", s);
+        let mut new_meta_grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
         for y in 0..(ARRAY_DIMS - s + 1) {
             for x in 0..(ARRAY_DIMS - s + 1) {
-                let result = get_new_meta_grid(x, y, s, &grid, &meta_grid);
+                let result = get_new_meta_grid(x, y, s, &grid, &meta_grid, &lagging_grid);
                 // println!("Result for ({}, {}) at size {}: {}", x, y, s, result);
-                meta_grid[y][x] = result;
+                new_meta_grid[y][x] = result;
                 if result > curr_max {
                     curr_max = result;
                     curr_best_coord = (x, y);
@@ -108,17 +124,25 @@ fn part2(serial_number: usize) -> (i32, (usize, usize), usize) {
                 }
             }
         }
-        
-        // print_grid(&meta_grid);
+
+        // if print_grid_bool == true {
+        //     println!("LAGGING_GRID");
+        //     lagging_grid = meta_grid;
+        //     print_grid(&lagging_grid);
+        //     println!("META_GRID");
+        //     meta_grid = new_meta_grid;
+        //     print_grid(&meta_grid);
+        //     println!("");
+        // }
     }
 
     println!("{}, {:?}, {}", curr_max, curr_best_coord, curr_best_size);
     return (curr_max, curr_best_coord, curr_best_size);
 }
 
-fn print_grid(grid: &[[i32; 3]; 3]) {
-    for y in 0..3 {
-        for x in 0..3 {
+fn print_grid(grid: &[[i32; 5]; 5]) {
+    for y in 0..5 {
+        for x in 0..5 {
             print!("{} ", grid[y][x]);
         }
         println!("");
@@ -126,15 +150,25 @@ fn print_grid(grid: &[[i32; 3]; 3]) {
 }
 
 fn main() {
-    // assert!(get_cell_value(3, 5, 8) == 4);
-    // assert!(get_cell_value(122, 79, 57) == -5);
-    // assert!(get_cell_value(217, 196, 39) == 0);
-    // assert!(get_cell_value(101, 153, 71) == 4);
-    // assert!(part1(18) == (29, (33, 45)));
-    // assert!(part1(42) == (30, (21, 61)));
-    // println!("Solution to Part 1 is: {:?}", part1(4151));
-    // assert!(part2(18) == (113, (90, 269), 16));
-    // assert!(part2(42) == (119, (232, 251), 12));
+    assert!(get_cell_value(3, 5, 8) == 4);
+    assert!(get_cell_value(122, 79, 57) == -5);
+    assert!(get_cell_value(217, 196, 39) == 0);
+    assert!(get_cell_value(101, 153, 71) == 4);
+    assert!(part1(18) == (29, (33, 45)));
+    assert!(part1(42) == (30, (21, 61)));
+    let part1_start = Instant::now();
+    println!("Solution to Part 1 is: {:?}", part1(4151));
+    println!("Part 1 took {}.{:03} seconds",
+        part1_start.elapsed().as_secs(),
+        part1_start.elapsed().subsec_millis()
+    );
+    assert!(part2(18) == (113, (90, 269), 16));
+    assert!(part2(42) == (119, (232, 251), 12));
+    let part2_start = Instant::now();
     println!("Solution to Part 2 is: {:?}", part2(4151));
+    println!("Part 2 took {}.{:03} seconds",
+        part2_start.elapsed().as_secs(),
+        part2_start.elapsed().subsec_millis()
+    );
     // part2(50);
 }

@@ -50,31 +50,31 @@ fn get_new_meta_grid(
     s: usize,
     grid: &[[i32; 300]; 300],
     meta_grid: &[[i32; 300]; 300],
-    lagging_grid: &[[i32; 300]; 300]
+    // lagging_grid: &[[i32; 300]; 300]
     // grid: &[[i32; 5]; 5],
     // meta_grid: &[[i32; 5]; 5],
     // lagging_grid: &[[i32; 5]; 5]
 ) -> i32 {
-    return meta_grid[y][x]
-        + meta_grid[y + 1][x + 1]
-        - lagging_grid[y + 1][x + 1]
-        + grid[y][x + s - 1]
-        + grid[y + s - 1][x];
-    // let mut sum = (*meta_grid)[y][x];
+    // return meta_grid[y][x]
+        // + meta_grid[y + 1][x + 1]
+        // - lagging_grid[y + 1][x + 1]
+        // + grid[y][x + s - 1]
+        // + grid[y + s - 1][x];
+    let mut sum = (*meta_grid)[y][x];
     // println!("Original value is {} at {}, {} for size {}", sum, x, y, s);
-    // for i in 0..s {
-    //     let res = (*grid)[y + i][x + s - 1];
-    //     println!("Adding {}, {}: {}", x + s - 1, y + i, res);
-    //     sum += res;
-    // }
+    for i in 0..s {
+        let res = (*grid)[y + i][x + s - 1];
+        // println!("Adding {}, {}: {}", x + s - 1, y + i, res);
+        sum += res;
+    }
 
-    // for i in 0..(s - 1) {
-    //     let res = (*grid)[y + s - 1][x + i];
-    //     println!("Adding {}, {}: {}", x + i, y + s - 1, res);
-    //     sum += res;
-    // }
+    for i in 0..(s - 1) {
+        let res = (*grid)[y + s - 1][x + i];
+        // println!("Adding {}, {}: {}", x + i, y + s - 1, res);
+        sum += res;
+    }
 
-    // return sum;
+    return sum;
 }
 
 fn part2(serial_number: usize) -> (i32, (usize, usize), usize) {
@@ -83,7 +83,7 @@ fn part2(serial_number: usize) -> (i32, (usize, usize), usize) {
 
     let mut grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
     let mut meta_grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
-    let mut lagging_grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
+    // let mut lagging_grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
 
     let mut curr_max = MIN;
     let mut curr_best_coord: (usize, usize) = (0, 0);
@@ -95,6 +95,7 @@ fn part2(serial_number: usize) -> (i32, (usize, usize), usize) {
             grid[y][x] = result;
             meta_grid[y][x] = result;
             if result > curr_max {
+                // println!("New best: {}", result);
                 curr_max = result;
                 curr_best_coord = (x, y);
             }
@@ -110,14 +111,17 @@ fn part2(serial_number: usize) -> (i32, (usize, usize), usize) {
     // }
 
     for s in 2..(ARRAY_DIMS + 1) {
-        println!("Handling size {}", s);
-        let mut new_meta_grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
+        // println!("Handling size {}", s);
+        // let mut new_meta_grid: [[i32; ARRAY_DIMS]; ARRAY_DIMS] = [[0; ARRAY_DIMS]; ARRAY_DIMS];
         for y in 0..(ARRAY_DIMS - s + 1) {
             for x in 0..(ARRAY_DIMS - s + 1) {
-                let result = get_new_meta_grid(x, y, s, &grid, &meta_grid, &lagging_grid);
+                let result = get_new_meta_grid(x, y, s, &grid, &meta_grid);
+                // let result = get_new_meta_grid(x, y, s, &grid, &meta_grid, &lagging_grid);
                 // println!("Result for ({}, {}) at size {}: {}", x, y, s, result);
-                new_meta_grid[y][x] = result;
+                meta_grid[y][x] = result;
+                // new_meta_grid[y][x] = result;
                 if result > curr_max {
+                    // println!("New best: {}", result);
                     curr_max = result;
                     curr_best_coord = (x, y);
                     curr_best_size = s;

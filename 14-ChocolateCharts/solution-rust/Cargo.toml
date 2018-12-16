@@ -1,0 +1,6 @@
+[package]
+name = "solution-rust"
+version = "0.1.0"
+authors = ["Dennis Wei <dwei@atlassian.com>"]
+
+[dependencies]

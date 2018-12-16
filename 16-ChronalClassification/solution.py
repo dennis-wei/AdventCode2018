@@ -1,4 +1,5 @@
 import re
+import time
 
 def addr(tokens, a, b, c):
     result = tokens[a] + tokens[b]
@@ -198,5 +199,9 @@ def part2(opcode_file, program_file):
 def test():
     assert part1('test_input.txt') == 1
 
+part1_start = time.time()
 part1('input_part1.txt')
+print(f"Part 1 took {time.time() - part1_start} seconds")
+part2_start = time.time()
 part2('input_part1.txt', 'input_part2.txt')
+print(f"Part 2 took {time.time() - part2_start} seconds")
